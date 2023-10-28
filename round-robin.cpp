@@ -5,13 +5,13 @@ using namespace std;
 #define all(x) begin(x), end(x)
 #define sz(x) (int)(x).size()
 typedef long long ll;
-typedef pair<int, int> pii;
+typedef pair<int, double> pii;
 typedef vector<int> vi;
 
 int main()
 {
   int N;            // number of processes
-  int Q;            // quantum in ms
+  double Q;            // quantum in ms
   pii processes[N]; // {pid, burst time in seconds}
 
   // input
@@ -19,9 +19,9 @@ int main()
   rep(i, 0, N)
   {
     int pid;
-    int burst;
+    double burst;
     cin >> pid >> burst;
-    processes[i] = {pid, burst * 1000};
+    processes[i] = {pid, burst};
   }
 
   // round robin
@@ -34,17 +34,19 @@ int main()
     pii p = q.front();
     q.pop();
     int pid = p.first;
-    int burst = p.second; // remaining burst time
+    double burst = p.second; // remaining burst time
 
-    if (burst > Q)
+    double quantumInSeconds = Q / 1000.0;  
+
+    if (burst > quantumInSeconds)
     {
-      time += Q;
-      burst -= Q;
+      time += static_cast<int>(Q);
+      burst -= quantumInSeconds;
       q.push({pid, burst});
 
       continue;
     }
-    time += burst;
+    time += static_cast<int>(round(burst * 1000.0));
     cout << pid << " "
          << "(" << time << ")" << endl;
   }
